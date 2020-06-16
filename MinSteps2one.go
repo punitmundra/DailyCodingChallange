@@ -64,6 +64,19 @@ func GetMinSteps(n int) int {
 			visited[element.value-1] = element.count + 1
 		}
 		// Apply Rule : 2
+		for z := 2; z*z <= element.value; z++ {
+			remainder := element.value % z
+			if remainder == 0 {
+				quo := element.value / z
+				if _, ok := visited[quo]; ok {
+					// if it is in the queue
+				} else {
+					queue = append(queue, Element{value: quo, count: element.count + 1})
+					visited[quo] = element.count + 1
+				}
+			}
+		}
+		/*
 		f := Factors(element.value)
 		length := len(f)
 		if length > 0 { // if length is not 0 then it is
@@ -85,7 +98,8 @@ func GetMinSteps(n int) int {
 				visited[mid] = element.count + 1
 			}
 		}
-	}
+		*/
+	} // end outer for
 	return 0
 }
 
