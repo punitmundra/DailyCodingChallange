@@ -1,0 +1,32 @@
+FROM golang:latest
+
+RUN mkdir -p /go/src/Squadcast
+RUN mkdir -p /go/bin
+RUN mkdir -p /go/pkg
+ENV GOPATH=/go 
+ENV GO111MODULE=off
+ADD . /go/src/Squadcast
+WORKDIR /go/src/Squadcast/APIServer
+RUN go get ./...
+RUN go build -o apiserver .
+
+WORKDIR /go/src/Squadcast/EventHandler
+RUN go get ./...
+RUN go build -o eventhandler .
+
+WORKDIR /go/src/Squadcast/Worker/Jira
+RUN go get ./...
+RUN go build -o jira .
+
+WORKDIR /go/src/Squadcast/Worker/Slack
+RUN go build -o slack .
+
+WORKDIR /go/src/Squadcast/Worker/Reddit
+RUN go build -o reddit .
+
+WORKDIR /go/src/Squadcast
+EXPOSE 5000
+#EXPOSE 5001
+#EXPOSE 4222
+#EXPOSE 3306
+CMD ["./APIServer/apiserver","./NatsServer/gnatsd --addr 127.0.0.1 --port 4222","./EventHandler/eventhandler","./Worker/Jira/jira","./Worker/Slack/slack","./Worker/Reddit/reddit"] 

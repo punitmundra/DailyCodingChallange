@@ -1,0 +1,7 @@
+find ./ -type f -name "*.go" -exec sed -i -e 's/github.com\/nats-io\/go-nats-streaming/github.com\/nats-io\/stan.go/g' {} \;
+
+find ./ -type f -name "*.go" -exec sed -i -e 's/github.com\/nats-io\/go-nats/github.com\/nats-io\/nats.go/g' {} \;
+
+find ./ -type f -name "*.go" -exec sed -i -e 's/github.com\/nats-io\/nats-server/github.com\/nats-io\/nats-server\/v2/g' {} \;
+
+find ./ -type f -name "*.go" -exec sed -i -e 's#github.com\/nats-io\/nats"#github.com\/nats-io\/nats.go"#g' {} \;

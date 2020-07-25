@@ -1,0 +1,43 @@
+I have used the nats as publisher/subscriber.
+
+APIServer is the external HTTP server, which run on the 5000 port.
+
+I have deployed the service over Ec2. 
+
+The Ec2 hosted the all the microservices and mysql db together.
+
+EventHandler is the GRPC service.
+
+APIServer will trigger the RPC call to EventHandler. 
+
+EventHandler will publish the event, their are 3 Worker (Jira,Slack and Reddit) which subscriber to the following events
+
+Jira : incident_created
+Slack : query_created
+Reddit : post_created
+
+
+To run the nats server as service 
+./gnatsd --addr 127.0.0.1 --port 4222
+
+
+API Server runs on port 5000 
+GRPC Server runs on port 5001 
+mysql Server runs on port 3306
+
+
+Entry point to the application is APIServer
+
+APIServer has 4 end points methods.
+
+> create
+> ack
+> resolve
+> comment
+
+
+curl -XPOST http://13.127.243.212:5000/api/incident/create -d '{"name":"incident_created","status":"open","description":"not able to ship the log from ec2","priority":3,"Acknowlege":"false","reportedBy":"Abc company","type":"issue","severity":"medium"}'
+
+curl -XPOST http://13.127.243.212:5000/api/incident/create -d '{"name":"post_created","status":"open","description":"how  to run infinite chan slice","priority":3,"Acknowlege":"false","reportedBy":"Abc company","type":"post","severity":"low"}'
+
+curl -XPOST http://13.127.243.212:5000/api/incident/create -d '{"name":"query_created","status":"open","description":"need a covid dataset","priority":2,"Acknowlege":"false","reportedBy":"Abc company","type":"query","severity":"high"}'
